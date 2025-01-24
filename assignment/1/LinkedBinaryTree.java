@@ -1,4 +1,4 @@
-
+import java.util.ArrayList;
 
 public class LinkedBinaryTree {
 	private Node root;
@@ -9,44 +9,97 @@ public class LinkedBinaryTree {
 		length = 0;
 	}
 	
-	public int getLength() {
+	public int length() {
 		return length;
 	}
 	
+	
+	
 	public boolean add(int value)  {
-		Node current = root;
-		boolean foundPlacement = false;
+		Node newNode = new Node(value);
+		boolean added = false;
 		
-		if(current == null) {
-			current = new Node(value);
-			foundPlacement = true;
+		if(root == null) {
+			root = newNode;
+			added = true;
 			length++;
 		}
 		else {
-			while(!foundPlacement) {
-				if(value < current.data) {
-					current = current.left;
-				}
-				else {
-					current = current.right;
-				}
+			added = add(newNode, root);
+		}
+		return added;
+	}
+	
+	private boolean add(Node newNode, Node current) {
+		boolean added = false;
+		
+		/*if(current == null) {
+			current = newNode;
+			added = true;
+			length++;
+		}*/
+		
+		if(newNode.data < current.data) {
+			if(current.left == null) {
+				current.left = newNode;
+				added = true;
+			}
+			else {
+				added = add(newNode, current.left);
 			}
 		}
-		return foundPlacement;
+		else {
+			if(current.right == null) {
+				current.right = newNode;
+				added = true;
+			}
+			else {
+				added = add(newNode, current.right);
+			}
+		}
+		return added;
 	}
 	
+	//TODO
+	public ArrayList<Integer> preOrder() {
+		return preOrder(root);
+	}
 	
-	public void getPreOrder() {
-		
+	private ArrayList<Integer> preOrder(Node current) {
+		ArrayList<Integer> arr = new ArrayList<Integer>();
+		if(current != null) {
+			arr.add(current.data);
+			arr.addAll(preOrder(current.left));
+			arr.addAll(preOrder(current.right));
+		}
+		return arr;
+	}
+	
+	//TODO
+	public ArrayList<Integer> postOrder() {
+		return postOrder(root);
 	}
 
-	public void getPostOrder() {
-		
+	private ArrayList<Integer> postOrder(Node current) {
+		ArrayList<Integer> arr = new ArrayList<Integer>();
+		if(current != null) {
+			arr.add(current.data);
+		}
+		return arr;
+	}
+	
+	public ArrayList<Integer> inOrder() {
+		return inOrder(root);
 	}
 
-//do these recursively
-	public String getInOrder(Node root) {
-		//append each node's data to the string
+	private ArrayList<Integer> inOrder(Node current) {
+		ArrayList<Integer> arr = new ArrayList<Integer>();
+		if(current != null) {
+			arr.addAll(inOrder(current.left));
+			arr.add(current.data);
+			arr.addAll(inOrder(current.right));
+		}
+		return arr;
 	}
 	
 	private class Node {
@@ -54,11 +107,13 @@ public class LinkedBinaryTree {
 		public Node left;
 		public Node right;
 		
+		
 		public Node(int dataIn) {
 			data = dataIn;
 			left = null;
 			right = null;
 		}
+		
 		
 	}
 }
